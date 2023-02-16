@@ -14,7 +14,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.bobbucks.PaymentActivity">
+        <activity android:name="dev.bobbucks.PaymentActivity" android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="org.chromium.intent.action.PAY" />
             </intent-filter>

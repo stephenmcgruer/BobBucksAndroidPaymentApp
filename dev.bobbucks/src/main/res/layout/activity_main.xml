@@ -11,7 +11,33 @@
         tools:context="dev.bobbucks.MainActivity">
 
     <TextView
-            android:text="Hello World!"
+            android:text="Welcome to Bob Pay. This is an example payment app, which does not process real payments."
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/welcome_text" />
+
+    <TextView
+        android:text="Please set your username:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcome_text"
+        android:id="@+id/username_text"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <EditText
+        android:hint="username@mail.example"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username_text"
+        android:id="@+id/username_input"/>
+
+    <Button
+        android:text="Set"
+        android:enabled="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignBaseline="@+id/username_input"
+        android:layout_toRightOf="@+id/username_input"
+        android:id="@+id/set_button"/>
 </RelativeLayout>
