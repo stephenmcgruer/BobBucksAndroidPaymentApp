@@ -1,0 +1,4 @@
+{
+  "default_applications": ["https://stephenmcgruer.github.io/BobBucksAndroidPaymentApp/manifest.json"],
+  "supported_origins": ["https://stephenmcgruer.github.io"]
+}

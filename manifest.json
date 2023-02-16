@@ -1,0 +1,18 @@
+{
+  "name": "Pay with BobBucks",
+  "short_name": "BobBucks",
+  "icons": [{
+  	"src": "tree.png",
+  	"sizes": "48x48",
+  	"type": "image/png"
+  }],
+  "related_applications": [{
+      "platform": "play",
+      "id": "dev.bobbucks",
+      "min_version": "1",
+      "fingerprints": [{
+          "type": "sha256_cert",
+          "value": "A4:67:16:8F:DB:C8:93:B5:80:0C:11:99:57:DC:EE:46:F0:94:28:B4:51:B3:05:97:C6:5E:2F:64:B7:13:24:25"
+      }]
+  }]
+}
