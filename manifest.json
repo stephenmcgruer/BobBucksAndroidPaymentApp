@@ -6,6 +6,11 @@
   	"sizes": "48x48",
   	"type": "image/png"
   }],
+  "serviceworker": {
+    "src": "sw-bobbucks.js",
+    "use_cache": false
+  },
+  "prefer_related_applications": true,
   "related_applications": [{
       "platform": "play",
       "id": "dev.bobbucks",
