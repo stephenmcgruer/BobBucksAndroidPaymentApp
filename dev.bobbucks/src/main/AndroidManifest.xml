@@ -7,13 +7,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="dev.bobbucks.MainActivity">
+        <activity android:name="dev.bobbucks.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.bobbucks.PaymentActivity" android:theme="@style/Theme.Transparent">
+        <activity android:name="dev.bobbucks.PaymentActivity" android:theme="@style/Theme.Transparent"
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.chromium.intent.action.PAY" />
             </intent-filter>

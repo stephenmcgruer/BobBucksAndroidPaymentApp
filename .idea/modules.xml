@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BobBucksAndroidPaymentApp.iml" filepath="$PROJECT_DIR$/.idea/modules/BobBucksAndroidPaymentApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/BobBucksAndroidPaymentApp.dev.bobbucks.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/github.BobBucksAndroidPaymentApp.iml" filepath="$PROJECT_DIR$/.idea/modules/github.BobBucksAndroidPaymentApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/github.BobBucksAndroidPaymentApp.dev.bobbucks.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/github.BobBucksAndroidPaymentApp.dev.bobbucks.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.bobbucks/github.BobBucksAndroidPaymentApp.dev.bobbucks.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.bobbucks/github.BobBucksAndroidPaymentApp.dev.bobbucks.androidTest.iml" />
