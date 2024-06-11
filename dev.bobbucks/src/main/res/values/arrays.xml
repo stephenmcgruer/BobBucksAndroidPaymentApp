@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="method_names">
-        <item>https://www.stephenmcgruer.com/BobBucksAndroidPaymentApp/payment-manifest.json</item>
+        <item>https://bobbucks.dev/pay/payment-manifest.json</item>
     </string-array>
 </resources>
