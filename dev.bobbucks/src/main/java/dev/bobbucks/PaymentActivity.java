@@ -25,7 +25,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     private final Handler mHandler = new Handler();
     private boolean mError;
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,15 +87,17 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
         if (!addItem(container, total)) showError("Invalid total.");
 
-        // Layout the app to be a half-height modal at the bottom of the screen.
-        WindowManager.LayoutParams attrs = getWindow().getAttributes();
-        int displayHeight = getWindowManager().getCurrentWindowMetrics().getBounds().height();
-        attrs.height = (int) (displayHeight * 0.5);
-        attrs.width = getWindowManager().getCurrentWindowMetrics().getBounds().width();
-        attrs.x = 0;
-        attrs.y = 0;
-        attrs.gravity = Gravity.BOTTOM;
-        getWindow().setAttributes(attrs);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Layout the app to be a half-height modal at the bottom of the screen.
+            WindowManager.LayoutParams attrs = getWindow().getAttributes();
+            int displayHeight = getWindowManager().getCurrentWindowMetrics().getBounds().height();
+            attrs.height = (int) (displayHeight * 0.5);
+            attrs.width = getWindowManager().getCurrentWindowMetrics().getBounds().width();
+            attrs.x = 0;
+            attrs.y = 0;
+            attrs.gravity = Gravity.BOTTOM;
+            getWindow().setAttributes(attrs);
+        }
     }
     private boolean addItem(LinearLayout container, JSONObject item) {
         if (item == null) return false;
