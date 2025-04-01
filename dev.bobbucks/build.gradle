@@ -23,6 +23,9 @@ android {
         }
     }
     namespace 'dev.bobbucks'
+    buildFeatures {
+        aidl true
+    }
 }
 
 dependencies {
