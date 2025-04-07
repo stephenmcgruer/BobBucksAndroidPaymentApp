@@ -55,37 +55,23 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        String details = extras.getString("details");
-        if (TextUtils.isEmpty(details)) {
-            showError("No shopping cart details in the extras.");
+        String totalString = extras.getString("total");
+        if (TextUtils.isEmpty(totalString)) {
+            showError("No total in the extras.");
             return;
         }
 
-        JSONObject json = null;
+        JSONObject totalJson = null;
         try {
-            json = new JSONObject(details);
+            totalJson = new JSONObject(totalString);
         } catch (JSONException e) {
-            showError("Cannot parse the shopping cart details into JSON.");
+            showError("Cannot parse the total into JSON.");
             return;
         }
 
-        JSONArray displayItems = json.optJSONArray("displayItems");
-        JSONObject total = json.optJSONObject("total");
-        if (total == null) {
-            showError("Total is not specified.");
-            return;
-        }
-
+        // TODO: Replace container with just a single TextView.
         LinearLayout container = (LinearLayout) findViewById(R.id.line_items);
-        if (displayItems != null) {
-            for (int i = 0; i < displayItems.length(); i++) {
-                if (!addItem(container, displayItems.optJSONObject(i))) {
-                    showError("Invalid shopping cart item.");
-                }
-            }
-        }
-
-        if (!addItem(container, total)) showError("Invalid total.");
+        if (!addItem(container, totalJson)) showError("Invalid total.");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Layout the app to be a half-height modal at the bottom of the screen.
