@@ -71,7 +71,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
         // TODO: Replace container with just a single TextView.
         LinearLayout container = (LinearLayout) findViewById(R.id.line_items);
-        if (!addItem(container, totalJson)) showError("Invalid total.");
+        if (!addTotal(container, totalJson)) showError("Invalid total.");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Layout the app to be a half-height modal at the bottom of the screen.
@@ -85,15 +85,12 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             getWindow().setAttributes(attrs);
         }
     }
-    private boolean addItem(LinearLayout container, JSONObject item) {
-        if (item == null) return false;
-
-        JSONObject amount = item.optJSONObject("amount");
-        if (amount == null) return false;
+    private boolean addTotal(LinearLayout container, JSONObject total) {
+        if (total == null) return false;
 
         TextView line = new TextView(this);
-        line.setText(String.format("%s %s %s", item.optString("label"),
-                amount.optString("currency"), amount.optString("value")));
+        line.setText(String.format("Total %s %s",
+                total.optString("currency"), total.optString("value")));
         container.addView(line);
         return true;
     }
