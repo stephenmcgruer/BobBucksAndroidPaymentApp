@@ -56,5 +56,13 @@
             android:id="@+id/continue_button"
             android:layout_below="@+id/description_text"
             android:layout_centerInParent="true"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Send Update"
+            android:id="@+id/send_update_button"
+            android:layout_below="@+id/continue_button"
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 </ScrollView>

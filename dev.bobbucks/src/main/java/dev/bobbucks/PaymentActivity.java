@@ -6,22 +6,24 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
+import org.chromium.components.payments.IPaymentDetailsUpdateServiceCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PaymentActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "PaymentActivity";
     private final Handler mHandler = new Handler();
     private boolean mError;
 
@@ -37,6 +39,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         setResultData(RESULT_CANCELED);
 
         findViewById(R.id.continue_button).setOnClickListener(this);
+        findViewById(R.id.send_update_button).setOnClickListener(this);
 
         SharedPreferences sharedPref = getSharedPreferences("dev.bobbucks.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username_key", null);
@@ -102,8 +105,28 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        setResultData(mError ? RESULT_CANCELED : RESULT_OK);
-        finish();
+        if (v == findViewById(R.id.continue_button)) {
+            Log.d(TAG, "Handling 'continue' button press");
+            setResultData(mError ? RESULT_CANCELED : RESULT_OK);
+            finish();
+        } else if (v == findViewById(R.id.send_update_button)) {
+            Log.i(TAG, "Handling 'send update' button press");
+            if (PaymentDetailsUpdateServiceCallbackImpl.sChromeService == null) {
+                Log.e(TAG, "UpdatePaymentDetailsServiceImpl.sChromeService is null");
+            } else {
+                Bundle paymentHandlerMethodData = new Bundle();
+                paymentHandlerMethodData.putString("methodName", "New Method Name");
+                IPaymentDetailsUpdateServiceCallback.Stub callbackStub = new PaymentDetailsUpdateServiceCallbackImpl().getBinder();
+                try {
+                    Log.d(TAG, "Calling into sChromeService.changePaymentMethod");
+                    PaymentDetailsUpdateServiceCallbackImpl.sChromeService.changePaymentMethod(paymentHandlerMethodData, callbackStub);
+                } catch (RemoteException e) {
+                    Log.e(TAG, "RemoteException when calling changePaymentMethod:", e);
+                }
+            }
+        } else {
+            Log.e(TAG, "onClick, unknown view!");
+        }
     }
 
     private void setResultData(int resultType) {
