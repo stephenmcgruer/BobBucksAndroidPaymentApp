@@ -3,5 +3,5 @@ package org.chromium;
 import org.chromium.IsReadyToPayServiceCallback;
 
 interface IsReadyToPayService {
-    oneway void isReadyToPay(IsReadyToPayServiceCallback callback);
+    oneway void isReadyToPay(IsReadyToPayServiceCallback callback, in Bundle parameters);
 }
