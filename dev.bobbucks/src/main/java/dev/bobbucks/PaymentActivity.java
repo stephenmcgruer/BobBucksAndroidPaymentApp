@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -29,9 +29,13 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "PaymentActivity";
     public static final String ACTION_CHANGE_PAYMENT_METHOD = "dev.bobbucks.CHANGE_PAYMENT_METHOD";
     public static final String EXTRA_PAYMENT_HANDLER_METHOD_DATA = "payment_handler_method_data";
-    private final Handler mHandler = new Handler();
     private boolean mError;
     private BroadcastReceiver mUpdateReceiver;
+    private Button mContinueButton;
+    private Button mSendUpdateButton;
+    private TextView mUsernameText;
+    private TextView mErrorMessage;
+    private TextView mTotalTextView;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -44,13 +48,19 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         // click listener if the user accepts.
         setResultData(RESULT_CANCELED);
 
-        findViewById(R.id.continue_button).setOnClickListener(this);
-        findViewById(R.id.send_update_button).setOnClickListener(this);
+        mContinueButton = findViewById(R.id.continue_button);
+        mSendUpdateButton = findViewById(R.id.send_update_button);
+        mUsernameText = findViewById(R.id.username_text);
+        mErrorMessage = findViewById(R.id.error_message);
+        mTotalTextView = findViewById(R.id.total_text_view);
+
+        mContinueButton.setOnClickListener(this);
+        mSendUpdateButton.setOnClickListener(this);
 
         SharedPreferences sharedPref = getSharedPreferences("dev.bobbucks.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username_key", null);
         String welcomeText = "Welcome " + (username != null ? username : "non-signed in user") + "!";
-        ((TextView) findViewById(R.id.username_text)).setText(welcomeText);
+        mUsernameText.setText(welcomeText);
 
         Intent callingIntent = getIntent();
         if (null == callingIntent) {
@@ -70,17 +80,14 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        JSONObject totalJson = null;
         try {
-            totalJson = new JSONObject(totalString);
+            JSONObject totalJson = new JSONObject(totalString);
+            mTotalTextView.setText(String.format("Total %s %s",
+                    totalJson.optString("currency"), totalJson.optString("value")));
         } catch (JSONException e) {
             showError("Cannot parse the total into JSON.");
             return;
         }
-
-        // TODO: Replace container with just a single TextView.
-        LinearLayout container = (LinearLayout) findViewById(R.id.line_items);
-        if (!addTotal(container, totalJson)) showError("Invalid total.");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Layout the app to be a half-height modal at the bottom of the screen.
@@ -106,7 +113,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
                         if (!TextUtils.isEmpty(error)) {
                             // Can't use showError, because that also sets mError=true which isn't
                             // the case here, we're just showing this for demo purposes.
-                            ((TextView) findViewById(R.id.error_message)).setText(
+                            mErrorMessage.setText(
                                     "Received message from website: " + error);
                         }
                     }
@@ -125,36 +132,30 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private boolean addTotal(LinearLayout container, JSONObject total) {
-        if (total == null) return false;
-
-        TextView line = new TextView(this);
-        line.setText(String.format("Total %s %s",
-                total.optString("currency"), total.optString("value")));
-        container.addView(line);
-        return true;
-    }
-
     private void showError(String error) {
         mError = true;
-        ((TextView) findViewById(R.id.error_message)).setText(error);
+        mErrorMessage.setText(error);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == findViewById(R.id.continue_button)) {
-            Log.d(TAG, "Handling 'continue' button press");
-            setResultData(mError ? RESULT_CANCELED : RESULT_OK);
-            finish();
-        } else if (v == findViewById(R.id.send_update_button)) {
-            Log.i(TAG, "Handling 'send update' button press");
-            Intent intent = new Intent(ACTION_CHANGE_PAYMENT_METHOD);
-            Bundle paymentHandlerMethodData = new Bundle();
-            paymentHandlerMethodData.putString("methodName", "New Method Name");
-            intent.putExtra(EXTRA_PAYMENT_HANDLER_METHOD_DATA, paymentHandlerMethodData);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        } else {
-            Log.e(TAG, "onClick, unknown view!");
+        switch (v.getId()) {
+            case R.id.continue_button:
+                Log.d(TAG, "Handling 'continue' button press");
+                setResultData(mError ? RESULT_CANCELED : RESULT_OK);
+                finish();
+                break;
+            case R.id.send_update_button:
+                Log.i(TAG, "Handling 'send update' button press");
+                Intent intent = new Intent(ACTION_CHANGE_PAYMENT_METHOD);
+                Bundle paymentHandlerMethodData = new Bundle();
+                paymentHandlerMethodData.putString("methodName", "New Method Name");
+                intent.putExtra(EXTRA_PAYMENT_HANDLER_METHOD_DATA, paymentHandlerMethodData);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                break;
+            default:
+                Log.e(TAG, "onClick, unknown view!");
+                break;
         }
     }
 
