@@ -27,6 +27,8 @@ import org.json.JSONObject;
 
 public class PaymentActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "PaymentActivity";
+    public static final String ACTION_CHANGE_PAYMENT_METHOD = "dev.bobbucks.CHANGE_PAYMENT_METHOD";
+    public static final String EXTRA_PAYMENT_HANDLER_METHOD_DATA = "payment_handler_method_data";
     private final Handler mHandler = new Handler();
     private boolean mError;
     private BroadcastReceiver mUpdateReceiver;
@@ -146,19 +148,11 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             finish();
         } else if (v == findViewById(R.id.send_update_button)) {
             Log.i(TAG, "Handling 'send update' button press");
-            if (PaymentDetailsUpdateServiceCallbackImpl.sChromeService == null) {
-                Log.e(TAG, "UpdatePaymentDetailsServiceImpl.sChromeService is null");
-            } else {
-                Bundle paymentHandlerMethodData = new Bundle();
-                paymentHandlerMethodData.putString("methodName", "New Method Name");
-                IPaymentDetailsUpdateServiceCallback.Stub callbackStub = new PaymentDetailsUpdateServiceCallbackImpl().getBinder();
-                try {
-                    Log.d(TAG, "Calling into sChromeService.changePaymentMethod");
-                    PaymentDetailsUpdateServiceCallbackImpl.sChromeService.changePaymentMethod(paymentHandlerMethodData, callbackStub);
-                } catch (RemoteException e) {
-                    Log.e(TAG, "RemoteException when calling changePaymentMethod:", e);
-                }
-            }
+            Intent intent = new Intent(ACTION_CHANGE_PAYMENT_METHOD);
+            Bundle paymentHandlerMethodData = new Bundle();
+            paymentHandlerMethodData.putString("methodName", "New Method Name");
+            intent.putExtra(EXTRA_PAYMENT_HANDLER_METHOD_DATA, paymentHandlerMethodData);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         } else {
             Log.e(TAG, "onClick, unknown view!");
         }
