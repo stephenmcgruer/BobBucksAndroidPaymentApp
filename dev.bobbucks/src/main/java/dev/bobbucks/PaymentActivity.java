@@ -1,7 +1,9 @@
 package dev.bobbucks;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.chromium.components.payments.IPaymentDetailsUpdateServiceCallback;
 import org.json.JSONException;
@@ -26,6 +29,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "PaymentActivity";
     private final Handler mHandler = new Handler();
     private boolean mError;
+    private BroadcastReceiver mUpdateReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -87,7 +91,34 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             attrs.gravity = Gravity.BOTTOM;
             getWindow().setAttributes(attrs);
         }
+
+        mUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String action = intent.getAction();
+                if (PaymentDetailsUpdateServiceCallbackImpl.ACTION_UPDATE_PAYMENT.equals(action)) {
+                    Bundle bundle = intent.getBundleExtra(PaymentDetailsUpdateServiceCallbackImpl.EXTRA_PAYMENT_DETAILS);
+                    if (bundle != null) {
+                        String error = bundle.getString("error");
+                        if (!TextUtils.isEmpty(error)) {
+                            showError("Received message from website: " + error);
+                        }
+                    }
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter(PaymentDetailsUpdateServiceCallbackImpl.ACTION_UPDATE_PAYMENT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mUpdateReceiver, filter);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mUpdateReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mUpdateReceiver);
+        }
+    }
+
     private boolean addTotal(LinearLayout container, JSONObject total) {
         if (total == null) return false;
 
