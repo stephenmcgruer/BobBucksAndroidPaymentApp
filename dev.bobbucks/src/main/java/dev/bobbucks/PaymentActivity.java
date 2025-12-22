@@ -97,11 +97,15 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             public void onReceive(Context context, Intent intent) {
                 final String action = intent.getAction();
                 if (PaymentDetailsUpdateServiceCallbackImpl.ACTION_UPDATE_PAYMENT.equals(action)) {
+                    Log.i(TAG, "Received ACTION_UPDATE_PAYMENT broadcast");
                     Bundle bundle = intent.getBundleExtra(PaymentDetailsUpdateServiceCallbackImpl.EXTRA_PAYMENT_DETAILS);
                     if (bundle != null) {
                         String error = bundle.getString("error");
                         if (!TextUtils.isEmpty(error)) {
-                            showError("Received message from website: " + error);
+                            // Can't use showError, because that also sets mError=true which isn't
+                            // the case here, we're just showing this for demo purposes.
+                            ((TextView) findViewById(R.id.error_message)).setText(
+                                    "Received message from website: " + error);
                         }
                     }
                 }
