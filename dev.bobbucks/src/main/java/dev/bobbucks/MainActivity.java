@@ -9,6 +9,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import dev.bobbucks.R;
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button mSetButton;
     EditText mUsernameInput;
+    CheckBox mShowFailsCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void afterTextChanged(Editable editable) {
                 mSetButton.setEnabled(true);
+            }
+        });
+
+        mShowFailsCheckbox = (CheckBox) findViewById(R.id.show_fails_checkbox);
+        boolean showFails = sharedPref.getBoolean("show_fails_key", false);
+        mShowFailsCheckbox.setChecked(showFails);
+        mShowFailsCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences sharedPref = getSharedPreferences("dev.bobbucks.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("show_fails_key", b);
+                editor.apply();
             }
         });
     }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BobBucks</string>
+    <string name="show_immediately_fails_label">Immediately fail show()</string>
+    <string name="debug_controls_header">Debug Controls</string>
 </resources>

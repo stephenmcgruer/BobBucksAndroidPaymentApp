@@ -42,11 +42,17 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_payment);
-
         // The default result is cancelled; this will be set to success instead in the 'Continue'
         // click listener if the user accepts.
         setResultData(RESULT_CANCELED);
+
+        SharedPreferences sharedPref = getSharedPreferences("dev.bobbucks.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE);
+        if (sharedPref.getBoolean("show_fails_key", false)) {
+            finish();
+            return;
+        }
+
+        setContentView(R.layout.activity_payment);
 
         mContinueButton = findViewById(R.id.continue_button);
         mSendUpdateButton = findViewById(R.id.send_update_button);
@@ -57,7 +63,6 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         mContinueButton.setOnClickListener(this);
         mSendUpdateButton.setOnClickListener(this);
 
-        SharedPreferences sharedPref = getSharedPreferences("dev.bobbucks.PREFERENCE_FILE_KEY", Context.MODE_PRIVATE);
         String username = sharedPref.getString("username_key", null);
         String welcomeText = "Welcome " + (username != null ? username : "non-signed in user") + "!";
         mUsernameText.setText(welcomeText);
