@@ -19,7 +19,7 @@ public class IsReadyToPayServiceImpl extends Service {
             new IsReadyToPayService.Stub() {
                 @Override
                 public void isReadyToPay(IsReadyToPayServiceCallback callback, Bundle parameters) {
-                    Log.d(TAG, "isReadyToPay called, returning true");
+                    Log.d(TAG, "isReadyToPay called");
                     Log.d(TAG, "parameters: " + (parameters == null ? "<null>" : parameters.toString()));
 
                     // For testing, this sample app allows the website to directly override what
@@ -29,26 +29,32 @@ public class IsReadyToPayServiceImpl extends Service {
                     boolean returnValue = true;
                     if (parameters != null) {
                         Log.d(TAG, "parameters keys: " + parameters.keySet().toString());
-                        String data = parameters.getString("data");
-                        if (!data.isEmpty()) {
-                            Log.d(TAG, "data: " + data);
-                            try {
-                                JSONObject dataObject = new JSONObject(data);
-                                if (dataObject.has("returnValue")) {
-                                    try {
-                                        returnValue = dataObject.getBoolean("returnValue");
-                                        Log.d(TAG, "Overriding return value to " + returnValue);
-                                    } catch (JSONException e) {
-                                        Log.d(TAG, "'returnValue' parameter was not a boolean: " + data);
+                        Bundle methodData = parameters.getBundle("methodData");
+                        if (methodData != null) {
+                            Log.d(TAG, "methodData keys: " + methodData.keySet().toString());
+                            String bobBucksMethodData = methodData.getString("https://bobbucks.dev/pay");
+                            if (bobBucksMethodData != null) {
+                                Log.d(TAG, "BobBucks method data: " + bobBucksMethodData);
+                                try {
+                                    JSONObject dataObject = new JSONObject(bobBucksMethodData);
+                                    if (dataObject.has("returnValue")) {
+                                        try {
+                                            returnValue = dataObject.getBoolean("returnValue");
+                                            Log.d(TAG, "Overriding return value to " + returnValue);
+                                        } catch (JSONException e) {
+                                            Log.d(TAG, "'returnValue' parameter was not a boolean: " + bobBucksMethodData);
+                                        }
+                                    } else {
+                                        Log.d(TAG, "no 'returnValue' present");
                                     }
-                                } else {
-                                    Log.d(TAG, "no 'returnValue' present in data");
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "Unable to parse BobBucks methodData as JSON: " + bobBucksMethodData);
                                 }
-                            } catch (JSONException e) {
-                                Log.e(TAG, "Unable to parse data as JSON: " + data);
+                            } else {
+                                Log.d(TAG, "No 'https://bobbucks.dev/pay' method data inside methodData");
                             }
                         } else {
-                            Log.d(TAG, "No 'data' passed into PaymentRequest");
+                            Log.e(TAG, "'methodData' was null!");
                         }
                     }
 
